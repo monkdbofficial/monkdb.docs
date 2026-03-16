@@ -5,7 +5,7 @@ on:
     branches: ["main"]
     types: [closed]
     paths:
-      - "docs/v3/releases/**"
+      - "v3/releases/**"
       - "scripts/docs/generate_release_md.py"
       - ".github/workflows/docs-release-automation.yml"
 
@@ -37,4 +37,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "docs: auto-generate release.md"
-          file_pattern: docs/v3/release.md
+          file_pattern: v3/release.md
