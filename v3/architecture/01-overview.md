@@ -24,13 +24,30 @@ It supports:
 
 ## Workload decision table
 
-| If your primary need is... | Prefer MonkDB capability | Why |
-| --- | --- | --- |
-| PostgreSQL-compatible SQL apps | PGWire endpoint | Works with existing PostgreSQL clients and drivers. |
-| Service-to-service SQL execution | HTTP SQL endpoint | Simpler auth/routing for API-driven workloads. |
-| Hybrid semantic + lexical relevance | `FLOAT_VECTOR` + full-text | Keeps ranking logic in one query path. |
-| Policy-driven data access controls | Governance policies/contracts | Enforcement and observability are built into runtime. |
-| Data-flow traceability for AI/ETL | Lineage sinks + audit sinks | Captures context and outcomes for operations/compliance. |
+| If your primary need is... | Prefer | MonkDB capability | Why |
+|----------------------------|--------|-------------------|-----|
+| Running PostgreSQL-compatible applications | PGWire endpoint | Existing PostgreSQL clients, ORMs, and BI tools connect without modification. |
+| Service-to-service SQL execution | HTTP SQL endpoint | Simplifies authentication, routing, and stateless query execution for API-driven systems. |
+| Operational + analytical SQL in one engine | Distributed shared-nothing SQL execution | Eliminates the need for separate OLTP and analytics databases. |
+| Semi-structured application payloads | OBJECT / JSON columns | Store nested application data without schema fragmentation or ETL pipelines. |
+| Semantic search and RAG retrieval | FLOAT_VECTOR(N) + hybrid search | Combines vector similarity and lexical search in a single query path. |
+| AI agent memory and state persistence | Native memory tables | Stores agent context, conversation state, and embeddings without external vector databases. |
+| Hybrid document retrieval | Full-text + JSON + vector indexing | Enables knowledge search across documents, metadata, and embeddings in one system. |
+| Time-series telemetry (IoT, sensors, logs) | Time-series optimized ingestion and querying | Handles high-frequency event streams with efficient storage and time-based queries. |
+| Geospatial analytics | geo_point / geo_shape types | Native spatial indexing and queries without a separate GIS database. |
+| Graph modeling and relationship traversal | Graph interfaces over relational/object tables | Enables graph queries and traversal without deploying a dedicated graph database. |
+| Knowledge graph + vector search workloads | Graph + vector in same table | Supports AI knowledge graphs with semantic retrieval in one platform. |
+| Large unstructured artifacts | Blob/object storage columns | Stores documents, images, and artifacts alongside metadata and embeddings. |
+| Querying external systems without pipelines | Foreign Data Wrappers (FDW) | Access external databases without data duplication. |
+| Hybrid semantic + structured analytics | SQL + vector + full-text in one query | Ranking logic stays inside the query engine rather than external services. |
+| Fine-grained governance enforcement | Row filters, column masking, contracts, policies | Governance rules are enforced during query planning and execution. |
+| Data usage traceability and compliance | Audit sinks + lineage sinks | Captures query execution, data flow, and access patterns for compliance. |
+| Runtime system observability | System tables (sys.jobs, sys.nodes, sys.shards) | Provides deep cluster and query visibility directly through SQL. |
+| Financial market data ingestion | Native FIX / ITCH / OUCH / FDC3 protocol support | Converts wire protocols directly into queryable structured data. |
+| Cross-protocol trading analytics | Unified market data model | Correlates trader intent, order flow, exchange response, and market state. |
+| Building AI + data applications without fragmented stacks | Multi-model engine (SQL + JSON + vector + geo + graph + time-series + blobs) | Replaces multiple specialized data systems with a single distributed platform. |
+
+
 
 ## Core architecture layers
 
