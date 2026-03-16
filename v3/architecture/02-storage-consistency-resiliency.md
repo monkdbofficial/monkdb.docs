@@ -4,32 +4,21 @@
 
 - Every table is sharded across the cluster.
 - Optional partitioning splits table data further by partition keys (for lifecycle and pruning).
-- Each shard persists as Lucene-backed index data on local node storage.
+- Each shard persists as a Lucene-backed index composed of immutable segments.
+- Writes are first recorded in the translog and then materialized into new segments during refresh cycles.
+- Background merge policies compact smaller segments into larger ones to maintain query efficiency.
 - Writes pass through journal/translog before durable segment transitions.
 - Replicas store independent shard copies for fault tolerance and read scalability.
 
 ## Write path
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Primary as Primary Shard
-    participant Replica1 as Replica Shard 1
-    participant Replica2 as Replica Shard 2
-
-    Client->>Primary: write row/document
-    Primary->>Primary: validate + apply + translog
-    Primary->>Replica1: replicate
-    Primary->>Replica2: replicate
-    Replica1-->>Primary: ack
-    Replica2-->>Primary: ack
-    Primary-->>Client: success
-```
+![Write path](../assets/architectures/write_path.png)
 
 Write-path notes:
 
 - Primary shard validates and applies writes first.
-- Replicas acknowledge according to replication policy.
+- Replication can operate in synchronous or quorum acknowledgement modes. 
+- The write is considered successful once the configured number of shard copies (primary + replicas) confirm persistence.
 - Under backpressure/failures, retries and recovery paths preserve consistency semantics at shard level.
 
 ## Read path types
@@ -60,7 +49,7 @@ Operationally important guarantees:
 
 ## MVCC and optimistic concurrency
 
-MonkDB uses versioned document semantics suitable for optimistic concurrency patterns.
+MonkDB uses MVCC-style versioned document semantics suitable for optimistic concurrency patterns.
 
 Typical pattern:
 
@@ -70,7 +59,7 @@ Typical pattern:
 
 ## Refresh and visibility model
 
-Search visibility depends on refresh cycles. For deterministic user flows:
+A refresh makes newly indexed segments visible to search readers without requiring a full disk flush. For deterministic user flows:
 
 - trigger `REFRESH TABLE <table>` after critical writes when immediate search visibility is required
 - keep refresh usage scoped to avoid excessive refresh overhead
@@ -87,17 +76,11 @@ SELECT * FROM doc.orders WHERE id = 'o-1';
 
 - Replica promotion on primary loss.
 - Automatic shard recovery and relocation after node events.
-- Cluster master election with quorum requirements.
+- Cluster coordination node election using quorum-based consensus.
 
 ## Failure recovery flow
 
-```mermaid
-flowchart LR
-    A[Primary Node Failure] --> B[Replica Promotion]
-    B --> C[Routing Table Update]
-    C --> D[Shard Recovery/Relocation]
-    D --> E[Cluster Back to STARTED]
-```
+![Failure recovery flow](../assets/architectures/Failure_Recovery_Flow.png)
 
 ## Recovery and allocation diagnostics
 
@@ -123,6 +106,10 @@ ORDER BY table_name, shard_id;
 - Partitioned retention: drop old partitions cheaply.
 - Tiering strategy: hot/warm/cold storage placement via operational shard moves.
 - Snapshot/restore for disaster recovery and rollback workflows.
+
+## Shard Distribution and Replica Placement
+
+![Shard distribution and replica placement](../assets/architectures/shard_tables.png)
 
 ## Backup and disaster recovery posture
 

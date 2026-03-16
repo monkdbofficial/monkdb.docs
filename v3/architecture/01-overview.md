@@ -13,67 +13,46 @@ It supports:
 - Native memory for agentic and RAG workflows
 - Graph modeling and traversal interfaces
 - External data federation through FDW
+- Unstructured data in the form of blobs
 
 ## Design goals
 
-- One engine for mixed SQL/search/vector/geo/graph workloads.
+- One engine for mixed SQL/search/vector/geo/graph/timeseries/full text/nosql/blob/memory workloads.
 - Horizontal scale through shard-based distribution.
 - High observability via system tables and runtime metrics.
 - Strong governance controls (policies, contracts, audit, lineage) built into query/runtime path.
 
 ## Workload decision table
 
-| If your primary need is... | Prefer MonkDB capability | Why |
-| --- | --- | --- |
-| PostgreSQL-compatible SQL apps | PGWire endpoint | Works with existing PostgreSQL clients and drivers. |
-| Service-to-service SQL execution | HTTP SQL endpoint | Simpler auth/routing for API-driven workloads. |
-| Hybrid semantic + lexical relevance | `FLOAT_VECTOR` + full-text | Keeps ranking logic in one query path. |
-| Policy-driven data access controls | Governance policies/contracts | Enforcement and observability are built into runtime. |
-| Data-flow traceability for AI/ETL | Lineage sinks + audit sinks | Captures context and outcomes for operations/compliance. |
+| If your primary need is... | Prefer | MonkDB capability | Why |
+|----------------------------|--------|-------------------|-----|
+| Running PostgreSQL-compatible applications | PGWire endpoint | Existing PostgreSQL clients, ORMs, and BI tools connect without modification. |
+| Service-to-service SQL execution | HTTP SQL endpoint | Simplifies authentication, routing, and stateless query execution for API-driven systems. |
+| Operational + analytical SQL in one engine | Distributed shared-nothing SQL execution | Eliminates the need for separate OLTP and analytics databases. |
+| Semi-structured application payloads | OBJECT / JSON columns | Store nested application data without schema fragmentation or ETL pipelines. |
+| Semantic search and RAG retrieval | FLOAT_VECTOR(N) + hybrid search | Combines vector similarity and lexical search in a single query path. |
+| AI agent memory and state persistence | Native memory tables | Stores agent context, conversation state, and embeddings without external vector databases. |
+| Hybrid document retrieval | Full-text + JSON + vector indexing | Enables knowledge search across documents, metadata, and embeddings in one system. |
+| Time-series telemetry (IoT, sensors, logs) | Time-series optimized ingestion and querying | Handles high-frequency event streams with efficient storage and time-based queries. |
+| Geospatial analytics | geo_point / geo_shape types | Native spatial indexing and queries without a separate GIS database. |
+| Graph modeling and relationship traversal | Graph interfaces over relational/object tables | Enables graph queries and traversal without deploying a dedicated graph database. |
+| Knowledge graph + vector search workloads | Graph + vector in same table | Supports AI knowledge graphs with semantic retrieval in one platform. |
+| Large unstructured artifacts | Blob/object storage columns | Stores documents, images, and artifacts alongside metadata and embeddings. |
+| Querying external systems without pipelines | Foreign Data Wrappers (FDW) | Access external databases without data duplication. |
+| Hybrid semantic + structured analytics | SQL + vector + full-text in one query | Ranking logic stays inside the query engine rather than external services. |
+| Fine-grained governance enforcement | Row filters, column masking, contracts, policies | Governance rules are enforced during query planning and execution. |
+| Data usage traceability and compliance | Audit sinks + lineage sinks | Captures query execution, data flow, and access patterns for compliance. |
+| Runtime system observability | System tables (sys.jobs, sys.nodes, sys.shards) | Provides deep cluster and query visibility directly through SQL. |
+| Financial market data ingestion | Native FIX / ITCH / OUCH / FDC3 protocol support | Converts wire protocols directly into queryable structured data. |
+| Cross-protocol trading analytics | Unified market data model | Correlates trader intent, order flow, exchange response, and market state. |
+| Building AI + data applications without fragmented stacks | Multi-model engine (SQL + JSON + vector + geo + graph + time-series + blobs) | Replaces multiple specialized data systems with a single distributed platform. |
+
+
 
 ## Core architecture layers
 
-```mermaid
-flowchart TB
-    subgraph Client Layer
-      C1[SQL Clients\nPGWire]
-      C2[HTTP SQL Clients]
-      C3[Gremlin Clients]
-    end
+![Core Architecture Layer](../assets/architectures/monkdb_arch_overview_1.png)
 
-    subgraph Access Layer
-      A1[PGWire Endpoint]
-      A2[HTTP Endpoint]
-      A3[Gremlin HTTP Gateway]
-    end
-
-    subgraph SQL Engine
-      S1[Parser + Analyzer]
-      S2[Planner + Optimizer]
-      S3[Distributed Execution]
-      S4[Function Runtime\nScalar/Agg/Table/UDF]
-    end
-
-    subgraph Data/Metadata
-      D1[Cluster State\nSchemas, Settings, Routing]
-      D2[Shard Storage\nLucene + Translog]
-      D3[System Schemas\nsys/information_schema]
-      D4[Governance Metadata\nPolicy/Contract/Lineage]
-    end
-
-    C1 --> A1
-    C2 --> A2
-    C3 --> A3
-
-    A1 --> S1
-    A2 --> S1
-    A3 --> S1
-
-    S1 --> S2 --> S3 --> D2
-    S3 --> D1
-    S3 --> D3
-    S3 --> D4
-```
 
 ## Control plane and data plane
 
@@ -105,22 +84,7 @@ This avoids primary/secondary bottlenecks common in single-writer architectures.
 
 ## Query execution lifecycle
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Coordinator as Coordinator Node
-    participant NodeA as Data Node A
-    participant NodeB as Data Node B
-
-    Client->>Coordinator: SQL request
-    Coordinator->>Coordinator: parse/analyze/plan
-    Coordinator->>NodeA: shard op
-    Coordinator->>NodeB: shard op
-    NodeA-->>Coordinator: partial result
-    NodeB-->>Coordinator: partial result
-    Coordinator->>Coordinator: merge/reduce/final projection
-    Coordinator-->>Client: result set
-```
+![Query exection lifecyle](../assets/architectures/query_exec.png)
 
 Execution stages:
 
@@ -132,21 +96,7 @@ Execution stages:
 
 ## Query path decision flow
 
-```mermaid
-flowchart TD
-    A[Incoming Request] --> B{Protocol}
-    B -->|PGWire| C[SQL Parser/Analyzer]
-    B -->|HTTP SQL| C
-    B -->|Gremlin HTTP| G[Gremlin Gateway -> SQL/graph ops]
-    G --> C
-    C --> D{Governance Active?}
-    D -->|Yes| E[Apply policy/contract checks]
-    D -->|No| F[Plan execution]
-    E --> F
-    F --> H[Distributed shard execution]
-    H --> I[Coordinator merge/finalize]
-    I --> J[Response + metrics/audit/lineage]
-```
+![Query path decision flow](../assets/architectures/query_path_flow.png)
 
 ## Multi-model model-in-one-table pattern
 
