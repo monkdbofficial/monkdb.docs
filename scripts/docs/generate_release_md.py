@@ -6,8 +6,8 @@ import re
 
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
-RELEASE_SRC = REPO_ROOT / "docs" / "v3" / "releases"
-RELEASE_DST = REPO_ROOT / "docs" / "v3" / "release.md"
+RELEASE_SRC = REPO_ROOT / "v3" / "releases"
+RELEASE_DST = REPO_ROOT / "v3" / "release.md"
 
 
 def version_key(version: str) -> tuple[int, int, int]:
@@ -18,8 +18,10 @@ def version_key(version: str) -> tuple[int, int, int]:
 
 
 def main() -> int:
-    files = sorted(RELEASE_SRC.glob("*.md"), key=lambda p: version_key(p.stem), reverse=True)
-    lines: list[str] = ["# Release Notes", "", "This page tracks feature highlights by MonkDB release.", ""]
+    files = sorted(RELEASE_SRC.glob("*.md"),
+                   key=lambda p: version_key(p.stem), reverse=True)
+    lines: list[str] = ["# Release Notes", "",
+                        "This page tracks feature highlights by MonkDB release.", ""]
 
     for file in files:
         version = file.stem
@@ -31,7 +33,8 @@ def main() -> int:
         lines.append("")
 
     RELEASE_DST.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
-    print(f"Generated {RELEASE_DST.relative_to(REPO_ROOT)} from {len(files)} release fragments.")
+    print(
+        f"Generated {RELEASE_DST.relative_to(REPO_ROOT)} from {len(files)} release fragments.")
     return 0
 
 
