@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 658 150" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-71.329344,-320.512993)">
+        <g transform="matrix(1.431832,0,0,1.431832,-132.933903,-177.315661)">
+            <g transform="matrix(2.844967,0,0,2.782631,-742.163893,-149.47787)">
+                <g transform="matrix(50,0,0,50,351.213349,216.267055)">
+                </g>
+                <text x="307.113px" y="216.267px" style="font-family:'IBMPlexSans-Medium', 'IBM Plex Sans', sans-serif;font-weight:500;font-size:50px;fill:#fff;">m</text>
+            </g>
+            <g transform="matrix(2.844967,0,0,2.782631,-555.464797,-149.47787)">
+                <g transform="matrix(50,0,0,50,336.113349,216.267055)">
+                </g>
+                <text x="307.113px" y="216.267px" style="font-family:'IBMPlexSans-Medium', 'IBM Plex Sans', sans-serif;font-weight:500;font-size:50px;fill:#fff;">n</text>
+            </g>
+            <g transform="matrix(2.844967,0,0,2.782631,-490.082481,-149.47787)">
+                <g transform="matrix(50,0,0,50,334.463349,216.267055)">
+                </g>
+                <text x="307.113px" y="216.267px" style="font-family:'IBMPlexSans-Medium', 'IBM Plex Sans', sans-serif;font-weight:500;font-size:50px;fill:#fff;">k</text>
+            </g>
+            <g transform="matrix(2.844967,0,0,2.782631,-415.880767,-151.147448)">
+                <g transform="matrix(50,0,0,50,336.713349,216.267055)">
+                </g>
+                <text x="307.113px" y="216.267px" style="font-family:'IBMPlexSans-Medium', 'IBM Plex Sans', sans-serif;font-weight:500;font-size:50px;fill:#fff;">d</text>
+            </g>
+            <g transform="matrix(2.844967,0,0,2.782631,-349.502712,-151.147448)">
+                <g transform="matrix(50,0,0,50,336.713349,216.267055)">
+                </g>
+                <text x="307.113px" y="216.267px" style="font-family:'IBMPlexSans-Medium', 'IBM Plex Sans', sans-serif;font-weight:500;font-size:50px;fill:#fff;">b</text>
+            </g>
+            <g transform="matrix(1.37037,0,0,1.088195,-127.222222,-228.917181)">
+                <path d="M303,558C317.902,558 330,573.239 330,592.01C330,610.78 317.902,626.019 303,626.019C288.098,626.019 276,610.78 276,592.01C276,573.239 288.098,558 303,558ZM315.51,600.764C321.136,594.704 321.796,584.032 316.984,576.947C312.172,569.862 303.697,569.03 298.071,575.09L290.49,583.255C284.864,589.315 284.204,599.987 289.016,607.072C293.828,614.157 302.303,614.99 307.929,608.929L315.51,600.764Z" style="fill:#fff;"/>
+            </g>
+        </g>
+    </g>
+</svg>
