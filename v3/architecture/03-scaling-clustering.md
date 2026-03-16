@@ -1,135 +1,362 @@
 # Scaling and Clustering Principles
 
-## Cluster sizing baseline
+MonkDB supports flexible clustering patterns to match different workload shapes, operational preferences, and resiliency requirements.
 
-For production:
+Clusters can scale horizontally for distributed workloads or use primary–replica patterns for simpler read-scaling deployments.
 
-- Minimum 3 nodes for quorum-safe operations.
-- Replication policy aligned with failure domain (node/rack/zone).
-- Storage and heap sized for both ingest and query peaks.
+---
 
-## Capacity planning dimensions
+# Supported Clustering Patterns
 
-Plan capacity across four dimensions:
+MonkDB supports two primary clustering models.
 
-- **CPU**: parse/plan/execute/merge pressure
-- **Memory**: heap, breakers, intermediate result sets
-- **Storage**: shard growth, replica multiplier, snapshot overhead
-- **Network**: replication traffic, relocation bandwidth, distributed query fan-out
+## 1. Distributed Shard-Based Cluster
 
-Use baseline load tests to capture steady-state and spike envelopes before production scale decisions.
+- Tables are partitioned into shards distributed across nodes.
+- Each shard has a **primary** and optional **replica copies**.
+- Query execution fans out across shard holders.
+- Reads and writes are distributed across the cluster.
 
-## Horizontal scaling model
+**Best suited for:**
 
-Scaling is additive:
+- Large datasets
+- Mixed operational + analytical workloads
+- High ingest throughput
+- Distributed compute scaling
 
-- Add nodes -> more CPU, memory, and storage bandwidth.
-- Rebalancing redistributes shards automatically.
-- Query fan-out leverages additional shard workers.
+![Shard distribution and replica placement](../assets/architectures/shard_tables.png)
 
-Practical scale-out flow:
+---
 
-1. Add one node (or one failure domain) at a time.
-2. Observe shard relocation (`sys.shards`, `sys.allocations`).
-3. Validate query latency/throughput under live load.
-4. Repeat incrementally.
+## 2. Primary with Read Replica Topology
 
-## Scale trigger decision table
+A primary node handles write operations while replicas serve read traffic.
 
-| Signal | Typical threshold pattern | Primary action |
-| --- | --- | --- |
-| Sustained high CPU | p95 node CPU near saturation during business peak | Add data nodes and rebalance shards. |
-| Breaker trips under normal workloads | recurring query/request/parent breaker exceptions | Add memory/capacity and tune heavy queries. |
-| Recovery windows too long | shard relocation/recovery exceeds SLO | Revisit shard sizing and node/storage class. |
-| Read latency spikes with traffic growth | p95/p99 read latency degrades with stable query shapes | Increase replicas or add query capacity nodes. |
+- Primary node processes writes
+- Replicas maintain synchronized copies
+- Replicas can serve read-heavy workloads
+- Provides simple scaling for read-intensive applications
 
-## Shard strategy guidance
+**Best suited for:**
 
-- Too few shards: underutilized parallelism.
-- Too many shards: metadata and scheduling overhead.
+- Read-heavy applications
+- Simpler operational topology
+- Controlled write workloads
+
+![Primary with read replica topology](../assets/architectures/cluster_patterns.png)
+
+---
+
+# Cluster Sizing Baseline
+
+For production deployments:
+
+- Minimum **3 nodes** for quorum-safe distributed clusters
+- Replication aligned with **failure domains** (node, rack, zone)
+- Storage sized for **data growth + replicas**
+- Memory sized for **query peaks and intermediate results**
+
+For primary–replica deployments:
+
+- Size primary node for **peak write load**
+- Size replicas for **read concurrency**
+
+---
+
+# Capacity Planning Dimensions
+
+Plan capacity across four dimensions.
+
+## CPU
+
+Handles:
+
+- SQL parsing
+- Query planning
+- Execution
+- Shard-level processing
+- Distributed merge operations
+
+## Memory
+
+Memory usage includes:
+
+- JVM heap
+- Query intermediate results
+- Circuit breakers
+- Caches
+- Distributed merge buffers
+
+## Storage
+
+Storage footprint includes:
+
+- Shard data
+- Replica copies
+- Translog files
+- Snapshot repositories
+
+## Network
+
+Network traffic includes:
+
+- Shard replication
+- Distributed query fan-out
+- Shard relocation
+- Recovery operations
+
+Baseline load testing should measure:
+
+- Steady-state performance
+- Peak ingest behavior
+- Worst-case query patterns
+
+---
+
+# Horizontal Scaling Model
+
+Scaling behavior depends on deployment topology.
+
+## Distributed Cluster Scaling
+
+Adding nodes increases:
+
+- Total CPU
+- Total memory
+- Storage capacity
+- Distributed query workers
+
+Shard allocation automatically redistributes data across nodes.
+
+Distributed queries utilize additional shard workers as the cluster grows.
+
+---
+
+## Primary–Replica Scaling
+
+Adding replicas increases:
+
+- Read throughput
+- Read concurrency
+- Failover capacity
+
+Write throughput remains bounded by the **primary node**.
+
+Read/write separation reduces contention on the write path.
+
+---
+
+# Practical Scale-Out Flow
+
+Recommended scaling procedure:
+
+1. Add one node or failure domain at a time
+2. Monitor shard relocation
+3. Observe cluster health
+4. Validate query latency and throughput
+5. Expand incrementally
+
+Monitor using:
+
+- `sys.nodes`
+- `sys.shards`
+- `sys.allocations`
+
+---
+
+# Scale Trigger Decision Table
+
+| Signal | Typical Pattern | Primary Action |
+|------|------|------|
+| Sustained high CPU | p95 node CPU near saturation | Add nodes and rebalance shards |
+| Primary node saturation | write-heavy workload | Scale primary node or distribute writes |
+| Breaker exceptions | memory pressure during queries | Increase memory capacity or tune queries |
+| Long shard recovery times | recovery exceeds SLO | Reduce shard size or improve storage |
+| Read latency spikes | p95/p99 read latency increases | Add replicas or additional nodes |
+| Write latency increases | replication or I/O pressure | Review replication policy and storage |
+
+---
+
+# Shard Strategy Guidance
+
+Shard count affects both performance and operational complexity.
+
+## Too Few Shards
+
+- Limited parallelism
+- Underutilized cluster resources
+
+## Too Many Shards
+
+- Scheduling overhead
+- Cluster metadata pressure
+- Slower recovery operations
 
 Choose shard counts based on:
 
-- expected table growth
-- concurrent query/write mix
-- node count trajectory
+- Expected dataset growth
+- Node count trajectory
+- Concurrent workload patterns
 
-## Shard count heuristics (operational)
+---
 
-- Keep shard sizes operationally manageable for recovery windows.
-- Prefer predictable partitioning for time-series retention.
-- Revisit shard strategy when node count changes materially.
+# Shard Size Heuristics
 
-## Replica strategy guidance
+Operational recommendations:
 
-- More replicas improve read parallelism and fault tolerance.
-- Replication increases write amplification and storage cost.
+- Keep shard sizes manageable for relocation
+- Prefer predictable partitioning for time-series workloads
+- Periodically review shard strategy as clusters grow
 
-Tune per table according to workload criticality and SLA.
+---
 
-## Zone-aware resiliency pattern
+# Replica Strategy Guidance
 
-![Zone aware resiliency pattern](../assets/architectures/zone_aware_res_pattern.png)
+Replicas improve:
 
-Run quorum-capable topology across independent failure domains.
+- Read throughput
+- Query parallelism
+- Fault tolerance
 
-## Kubernetes scaling principles
+Tradeoffs include:
 
-- StatefulSet for data nodes.
-- Persistent volumes per pod.
-- Anti-affinity to avoid co-locating replicas.
-- Scale gradually; monitor relocation pressure and query latency.
+- Increased storage usage
+- Additional write amplification
+- More recovery traffic
 
-## Docker and VM scaling principles
+Replica count should reflect:
 
-- Keep node identity stable (`node.name`) and storage persistent.
-- Avoid frequently recycling nodes with local-only storage.
-- Use explicit discovery and master initialization settings for clustered deployments.
+- SLA requirements
+- Read concurrency
+- Failure tolerance goals
 
-## Node-level vs cluster-level settings
+---
 
-Node-level examples:
+# Zone-Aware Resiliency
 
-- `network.*`, `path.*`, transport/http binding, local JVM heap.
+Deploy clusters across independent failure domains when possible.
 
-Cluster-level examples:
+Examples:
 
-- breaker limits (`indices.breaker.*`)
-- governance/audit/lineage switches
-- FDW local access gate (`fdw.allow_local`)
+- Availability zones
+- Racks
+- Physical hosts
 
-## Rolling operations
+![Zone aware resiliency](../assets/architectures/zone_avail.png)
 
-- Roll nodes one at a time where possible.
-- Wait for shard stabilization before next node operation.
-- Watch `sys.shards`, `sys.allocations`, `sys.nodes` throughout.
+Primaries and replicas should be distributed across zones to reduce correlated failures.
 
-## Safe rolling-change sequence
+---
 
-![Safe rolling change sequence](../assets/architectures/safe_rolling_change_seq.png)
+# Kubernetes Scaling Principles
 
-## Scale troubleshooting checklist
+Recommended patterns:
+
+- Deploy data nodes using **StatefulSets**
+- Assign **persistent volumes per pod**
+- Configure **pod anti-affinity**
+- Avoid placing shard replicas on the same node
+
+Scale gradually and monitor relocation and query latency during scaling operations.
+
+---
+
+# Docker and VM Deployment Principles
+
+Operational guidance:
+
+- Maintain stable `node.name`
+- Preserve persistent storage across restarts
+- Avoid frequent recycling of data nodes
+- Use explicit cluster discovery configuration
+
+Replica nodes must resynchronize cleanly after restarts.
+
+---
+
+# Node-Level vs Cluster-Level Settings
+
+## Node-Level Settings
+
+Examples:
+
+```
+network.*
+path.*
+node.name
+transport.*
+http.*
+JVM heap configuration
+```
+
+These settings apply only to the local node.
+
+---
+
+## Cluster-Level Settings
+
+Examples:
+
+```
+indices.breaker.*
+governance.*
+audit.*
+lineage.*
+fdw.allow_local
+```
+
+These settings affect the entire cluster.
+
+---
+
+# Rolling Operations
+
+Recommended approach:
+
+- Perform node updates **one at a time**
+- Allow shards to stabilize before continuing
+- Monitor cluster health throughout operations
+
+Key monitoring tables:
+
+- `sys.nodes`
+- `sys.shards`
+- `sys.allocations`
+
+---
+
+# Scale Troubleshooting Checklist
 
 ```sql
 SELECT name, load['1'], mem['used_percent'], heap['used']
 FROM sys.nodes
 ORDER BY name;
+```
 
+```sql
 SELECT table_name, id, routing_state, state
 FROM sys.shards
 ORDER BY table_name, id;
+```
 
+```sql
 SELECT table_name, shard_id, node_id, explanation
 FROM sys.allocations
 WHERE explanation IS NOT NULL
 ORDER BY table_name, shard_id;
 ```
 
-If latency rises during scale events, pause further node operations until relocation and breaker pressure stabilize.
+If latency increases during scale events:
 
-## Related docs
+- Pause further node operations
+- Wait for shard relocation to complete
+- Verify breaker pressure has stabilized
 
-- [Docker Compose (3-node)](../deployment/01-docker-compose-3node.md)
+---
+
+# Related Documentation
+
+- [Docker Compose Deployment](../deployment/01-docker-compose-3node.md)
 - [Production Topologies](../deployment/02-production-topologies.md)
 - [Kubernetes Deployment Principles](../deployment/03-kubernetes.md)
 - [Monitoring](../operations/monitoring.md)
