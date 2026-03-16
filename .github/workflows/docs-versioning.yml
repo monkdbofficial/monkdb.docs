@@ -1,0 +1,77 @@
+name: Docs Versioned Deploy
+
+on:
+  pull_request:
+    branches: ["main"]
+    types: [closed]
+    paths:
+      - "docs/v3/**"
+      - "mkdocs.yml"
+      - ".github/workflows/docs-versioning.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-version:
+    if: >
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.ref == 'staging' &&
+      github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install docs dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs mkdocs-material mike pymdown-extensions
+
+      - name: Build docs (strict)
+        run: mkdocs build --strict
+
+      - name: Guard deploy artifact scope
+        run: |
+          set -euo pipefail
+          disallowed_ext_pattern='\.(java|kt|scala|groovy|go|rs|c|cc|cpp|h|hpp|cs|swift|m|mm|jar|class)$'
+          disallowed_name_pattern='/(pom\.xml|build\.gradle|settings\.gradle|gradle\.properties)$'
+          ext_matches="$(find site -type f | grep -Ei "$disallowed_ext_pattern" || true)"
+          name_matches="$(find site -type f | grep -Ei "$disallowed_name_pattern" || true)"
+          if [ -n "$ext_matches$name_matches" ]; then
+            echo "Disallowed source/runtime artifacts found in built docs site:"
+            if [ -n "$ext_matches" ]; then
+              echo "$ext_matches"
+            fi
+            if [ -n "$name_matches" ]; then
+              echo "$name_matches"
+            fi
+            exit 1
+          fi
+          echo "Deploy artifact scope check passed: site contains documentation assets only."
+
+      - name: Resolve version label
+        id: version
+        run: |
+          VERSION="$(grep -m1 '^## ' docs/v3/release.md | awk '{print $2}')"
+          if [ -z "$VERSION" ]; then
+            VERSION="latest"
+          fi
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy version and update latest alias
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mike deploy --push --update-aliases "$VERSION" latest
+          mike set-default --push latest
