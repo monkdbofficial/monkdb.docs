@@ -10067,6 +10067,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#shard-distribution-and-replica-placement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shard Distribution and Replica Placement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#backup-and-disaster-recovery-posture" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -12408,6 +12419,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#shard-distribution-and-replica-placement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shard Distribution and Replica Placement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#backup-and-disaster-recovery-posture" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -12499,29 +12521,19 @@
 <ul>
 <li>Every table is sharded across the cluster.</li>
 <li>Optional partitioning splits table data further by partition keys (for lifecycle and pruning).</li>
-<li>Each shard persists as Lucene-backed index data on local node storage.</li>
+<li>Each shard persists as a Lucene-backed index composed of immutable segments.</li>
+<li>Writes are first recorded in the translog and then materialized into new segments during refresh cycles.</li>
+<li>Background merge policies compact smaller segments into larger ones to maintain query efficiency.</li>
 <li>Writes pass through journal/translog before durable segment transitions.</li>
 <li>Replicas store independent shard copies for fault tolerance and read scalability.</li>
 </ul>
 <h2 id="write-path">Write path</h2>
-<pre><code class="language-mermaid">sequenceDiagram
-    participant Client
-    participant Primary as Primary Shard
-    participant Replica1 as Replica Shard 1
-    participant Replica2 as Replica Shard 2
-
-    Client-&gt;&gt;Primary: write row/document
-    Primary-&gt;&gt;Primary: validate + apply + translog
-    Primary-&gt;&gt;Replica1: replicate
-    Primary-&gt;&gt;Replica2: replicate
-    Replica1--&gt;&gt;Primary: ack
-    Replica2--&gt;&gt;Primary: ack
-    Primary--&gt;&gt;Client: success
-</code></pre>
+<p><img alt="Write path" src="../../assets/architectures/write_path.png" /></p>
 <p>Write-path notes:</p>
 <ul>
 <li>Primary shard validates and applies writes first.</li>
-<li>Replicas acknowledge according to replication policy.</li>
+<li>Replication can operate in synchronous or quorum acknowledgement modes. </li>
+<li>The write is considered successful once the configured number of shard copies (primary + replicas) confirm persistence.</li>
 <li>Under backpressure/failures, retries and recovery paths preserve consistency semantics at shard level.</li>
 </ul>
 <h2 id="read-path-types">Read path types</h2>
@@ -12567,7 +12579,7 @@
 <li>Stronger immediate behavior for point-lookups by key.</li>
 </ul>
 <h2 id="mvcc-and-optimistic-concurrency">MVCC and optimistic concurrency</h2>
-<p>MonkDB uses versioned document semantics suitable for optimistic concurrency patterns.</p>
+<p>MonkDB uses MVCC-style versioned document semantics suitable for optimistic concurrency patterns.</p>
 <p>Typical pattern:</p>
 <ol>
 <li>Read current row version/state.</li>
@@ -12575,7 +12587,7 @@
 <li>Retry if conflict occurs.</li>
 </ol>
 <h2 id="refresh-and-visibility-model">Refresh and visibility model</h2>
-<p>Search visibility depends on refresh cycles. For deterministic user flows:</p>
+<p>A refresh makes newly indexed segments visible to search readers without requiring a full disk flush. For deterministic user flows:</p>
 <ul>
 <li>trigger <code>REFRESH TABLE &lt;table&gt;</code> after critical writes when immediate search visibility is required</li>
 <li>keep refresh usage scoped to avoid excessive refresh overhead</li>
@@ -12589,15 +12601,10 @@ SELECT * FROM doc.orders WHERE id = 'o-1';
 <ul>
 <li>Replica promotion on primary loss.</li>
 <li>Automatic shard recovery and relocation after node events.</li>
-<li>Cluster master election with quorum requirements.</li>
+<li>Cluster coordination node election using quorum-based consensus.</li>
 </ul>
 <h2 id="failure-recovery-flow">Failure recovery flow</h2>
-<pre><code class="language-mermaid">flowchart LR
-    A[Primary Node Failure] --&gt; B[Replica Promotion]
-    B --&gt; C[Routing Table Update]
-    C --&gt; D[Shard Recovery/Relocation]
-    D --&gt; E[Cluster Back to STARTED]
-</code></pre>
+<p><img alt="Failure recovery flow" src="../../assets/architectures/Failure_Recovery_Flow.png" /></p>
 <h2 id="recovery-and-allocation-diagnostics">Recovery and allocation diagnostics</h2>
 <p>Use system tables to track recovery health:</p>
 <pre><code class="language-sql">SELECT table_name, id, routing_state, state,
@@ -12617,6 +12624,8 @@ ORDER BY table_name, shard_id;
 <li>Tiering strategy: hot/warm/cold storage placement via operational shard moves.</li>
 <li>Snapshot/restore for disaster recovery and rollback workflows.</li>
 </ul>
+<h2 id="shard-distribution-and-replica-placement">Shard Distribution and Replica Placement</h2>
+<p><img alt="Shard distribution and replica placement" src="../../assets/architectures/shard_tables.png" /></p>
 <h2 id="backup-and-disaster-recovery-posture">Backup and disaster recovery posture</h2>
 <p>Recommended baseline:</p>
 <ol>

@@ -12463,10 +12463,11 @@
 <li>Native memory for agentic and RAG workflows</li>
 <li>Graph modeling and traversal interfaces</li>
 <li>External data federation through FDW</li>
+<li>Unstructured data in the form of blobs</li>
 </ul>
 <h2 id="design-goals">Design goals</h2>
 <ul>
-<li>One engine for mixed SQL/search/vector/geo/graph workloads.</li>
+<li>One engine for mixed SQL/search/vector/geo/graph/timeseries/full text/nosql/blob/memory workloads.</li>
 <li>Horizontal scale through shard-based distribution.</li>
 <li>High observability via system tables and runtime metrics.</li>
 <li>Strong governance controls (policies, contracts, audit, lineage) built into query/runtime path.</li>
@@ -12476,79 +12477,136 @@
 <thead>
 <tr>
 <th>If your primary need is...</th>
-<th>Prefer MonkDB capability</th>
+<th>Prefer</th>
+<th>MonkDB capability</th>
 <th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PostgreSQL-compatible SQL apps</td>
+<td>Running PostgreSQL-compatible applications</td>
 <td>PGWire endpoint</td>
-<td>Works with existing PostgreSQL clients and drivers.</td>
+<td>Existing PostgreSQL clients, ORMs, and BI tools connect without modification.</td>
+<td></td>
 </tr>
 <tr>
 <td>Service-to-service SQL execution</td>
 <td>HTTP SQL endpoint</td>
-<td>Simpler auth/routing for API-driven workloads.</td>
+<td>Simplifies authentication, routing, and stateless query execution for API-driven systems.</td>
+<td></td>
 </tr>
 <tr>
-<td>Hybrid semantic + lexical relevance</td>
-<td><code>FLOAT_VECTOR</code> + full-text</td>
-<td>Keeps ranking logic in one query path.</td>
+<td>Operational + analytical SQL in one engine</td>
+<td>Distributed shared-nothing SQL execution</td>
+<td>Eliminates the need for separate OLTP and analytics databases.</td>
+<td></td>
 </tr>
 <tr>
-<td>Policy-driven data access controls</td>
-<td>Governance policies/contracts</td>
-<td>Enforcement and observability are built into runtime.</td>
+<td>Semi-structured application payloads</td>
+<td>OBJECT / JSON columns</td>
+<td>Store nested application data without schema fragmentation or ETL pipelines.</td>
+<td></td>
 </tr>
 <tr>
-<td>Data-flow traceability for AI/ETL</td>
-<td>Lineage sinks + audit sinks</td>
-<td>Captures context and outcomes for operations/compliance.</td>
+<td>Semantic search and RAG retrieval</td>
+<td>FLOAT_VECTOR(N) + hybrid search</td>
+<td>Combines vector similarity and lexical search in a single query path.</td>
+<td></td>
+</tr>
+<tr>
+<td>AI agent memory and state persistence</td>
+<td>Native memory tables</td>
+<td>Stores agent context, conversation state, and embeddings without external vector databases.</td>
+<td></td>
+</tr>
+<tr>
+<td>Hybrid document retrieval</td>
+<td>Full-text + JSON + vector indexing</td>
+<td>Enables knowledge search across documents, metadata, and embeddings in one system.</td>
+<td></td>
+</tr>
+<tr>
+<td>Time-series telemetry (IoT, sensors, logs)</td>
+<td>Time-series optimized ingestion and querying</td>
+<td>Handles high-frequency event streams with efficient storage and time-based queries.</td>
+<td></td>
+</tr>
+<tr>
+<td>Geospatial analytics</td>
+<td>geo_point / geo_shape types</td>
+<td>Native spatial indexing and queries without a separate GIS database.</td>
+<td></td>
+</tr>
+<tr>
+<td>Graph modeling and relationship traversal</td>
+<td>Graph interfaces over relational/object tables</td>
+<td>Enables graph queries and traversal without deploying a dedicated graph database.</td>
+<td></td>
+</tr>
+<tr>
+<td>Knowledge graph + vector search workloads</td>
+<td>Graph + vector in same table</td>
+<td>Supports AI knowledge graphs with semantic retrieval in one platform.</td>
+<td></td>
+</tr>
+<tr>
+<td>Large unstructured artifacts</td>
+<td>Blob/object storage columns</td>
+<td>Stores documents, images, and artifacts alongside metadata and embeddings.</td>
+<td></td>
+</tr>
+<tr>
+<td>Querying external systems without pipelines</td>
+<td>Foreign Data Wrappers (FDW)</td>
+<td>Access external databases without data duplication.</td>
+<td></td>
+</tr>
+<tr>
+<td>Hybrid semantic + structured analytics</td>
+<td>SQL + vector + full-text in one query</td>
+<td>Ranking logic stays inside the query engine rather than external services.</td>
+<td></td>
+</tr>
+<tr>
+<td>Fine-grained governance enforcement</td>
+<td>Row filters, column masking, contracts, policies</td>
+<td>Governance rules are enforced during query planning and execution.</td>
+<td></td>
+</tr>
+<tr>
+<td>Data usage traceability and compliance</td>
+<td>Audit sinks + lineage sinks</td>
+<td>Captures query execution, data flow, and access patterns for compliance.</td>
+<td></td>
+</tr>
+<tr>
+<td>Runtime system observability</td>
+<td>System tables (sys.jobs, sys.nodes, sys.shards)</td>
+<td>Provides deep cluster and query visibility directly through SQL.</td>
+<td></td>
+</tr>
+<tr>
+<td>Financial market data ingestion</td>
+<td>Native FIX / ITCH / OUCH / FDC3 protocol support</td>
+<td>Converts wire protocols directly into queryable structured data.</td>
+<td></td>
+</tr>
+<tr>
+<td>Cross-protocol trading analytics</td>
+<td>Unified market data model</td>
+<td>Correlates trader intent, order flow, exchange response, and market state.</td>
+<td></td>
+</tr>
+<tr>
+<td>Building AI + data applications without fragmented stacks</td>
+<td>Multi-model engine (SQL + JSON + vector + geo + graph + time-series + blobs)</td>
+<td>Replaces multiple specialized data systems with a single distributed platform.</td>
+<td></td>
 </tr>
 </tbody>
 </table>
 <h2 id="core-architecture-layers">Core architecture layers</h2>
-<pre><code class="language-mermaid">flowchart TB
-    subgraph Client Layer
-      C1[SQL Clients\nPGWire]
-      C2[HTTP SQL Clients]
-      C3[Gremlin Clients]
-    end
-
-    subgraph Access Layer
-      A1[PGWire Endpoint]
-      A2[HTTP Endpoint]
-      A3[Gremlin HTTP Gateway]
-    end
-
-    subgraph SQL Engine
-      S1[Parser + Analyzer]
-      S2[Planner + Optimizer]
-      S3[Distributed Execution]
-      S4[Function Runtime\nScalar/Agg/Table/UDF]
-    end
-
-    subgraph Data/Metadata
-      D1[Cluster State\nSchemas, Settings, Routing]
-      D2[Shard Storage\nLucene + Translog]
-      D3[System Schemas\nsys/information_schema]
-      D4[Governance Metadata\nPolicy/Contract/Lineage]
-    end
-
-    C1 --&gt; A1
-    C2 --&gt; A2
-    C3 --&gt; A3
-
-    A1 --&gt; S1
-    A2 --&gt; S1
-    A3 --&gt; S1
-
-    S1 --&gt; S2 --&gt; S3 --&gt; D2
-    S3 --&gt; D1
-    S3 --&gt; D3
-    S3 --&gt; D4
-</code></pre>
+<p><img alt="Core Architecture Layer" src="../../assets/architectures/monkdb_arch_overview_1.png" /></p>
 <h2 id="control-plane-and-data-plane">Control plane and data plane</h2>
 <p>Control plane responsibilities:</p>
 <ul>
@@ -12575,21 +12633,7 @@
 </ul>
 <p>This avoids primary/secondary bottlenecks common in single-writer architectures.</p>
 <h2 id="query-execution-lifecycle">Query execution lifecycle</h2>
-<pre><code class="language-mermaid">sequenceDiagram
-    participant Client
-    participant Coordinator as Coordinator Node
-    participant NodeA as Data Node A
-    participant NodeB as Data Node B
-
-    Client-&gt;&gt;Coordinator: SQL request
-    Coordinator-&gt;&gt;Coordinator: parse/analyze/plan
-    Coordinator-&gt;&gt;NodeA: shard op
-    Coordinator-&gt;&gt;NodeB: shard op
-    NodeA--&gt;&gt;Coordinator: partial result
-    NodeB--&gt;&gt;Coordinator: partial result
-    Coordinator-&gt;&gt;Coordinator: merge/reduce/final projection
-    Coordinator--&gt;&gt;Client: result set
-</code></pre>
+<p><img alt="Query exection lifecyle" src="../../assets/architectures/query_exec.png" /></p>
 <p>Execution stages:</p>
 <ol>
 <li>Parse and analyze SQL.</li>
@@ -12599,20 +12643,7 @@
 <li>Stream partial results back to coordinator for final merge.</li>
 </ol>
 <h2 id="query-path-decision-flow">Query path decision flow</h2>
-<pre><code class="language-mermaid">flowchart TD
-    A[Incoming Request] --&gt; B{Protocol}
-    B --&gt;|PGWire| C[SQL Parser/Analyzer]
-    B --&gt;|HTTP SQL| C
-    B --&gt;|Gremlin HTTP| G[Gremlin Gateway -&gt; SQL/graph ops]
-    G --&gt; C
-    C --&gt; D{Governance Active?}
-    D --&gt;|Yes| E[Apply policy/contract checks]
-    D --&gt;|No| F[Plan execution]
-    E --&gt; F
-    F --&gt; H[Distributed shard execution]
-    H --&gt; I[Coordinator merge/finalize]
-    I --&gt; J[Response + metrics/audit/lineage]
-</code></pre>
+<p><img alt="Query path decision flow" src="../../assets/architectures/query_path_flow.png" /></p>
 <h2 id="multi-model-model-in-one-table-pattern">Multi-model model-in-one-table pattern</h2>
 <p>MonkDB allows mixed columns in one table, for example:</p>
 <ul>
