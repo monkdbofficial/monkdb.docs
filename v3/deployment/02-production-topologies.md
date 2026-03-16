@@ -16,6 +16,7 @@
 
 - Co-locate structured rows with vectors and text for hybrid search.
 - Use `FLOAT_VECTOR` + `MATCH` pipelines for relevance blending.
+- Blend `FLOAT_VECTOR` + `FULL TEXT SEARCH` + `GRAPH` for complete mapping of embeddings + lexical nature + relationships. 
 - Keep query memory protections (breakers) tuned.
 
 ## Docker Swarm
