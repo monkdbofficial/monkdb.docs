@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+:root {
+  --md-primary-fg-color: #0033A0;
+  --md-primary-fg-color--light: #1f4fb6;
+  --md-primary-fg-color--dark: #002578;
+  --md-accent-fg-color: #0033A0;
+  --md-text-font: "IBM Plex Sans";
+  --md-code-font: "IBM Plex Mono";
+}
+
+[data-md-color-scheme="default"] {
+  --md-default-bg-color: #FFFFFF;
+  --md-default-fg-color: #000000;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #000000;
+  --md-default-fg-color: #FFFFFF;
+  --md-typeset-a-color: #1e8AFF;
+  --md-accent-fg-color: #1E8AFF;
+}
+
+[data-md-color-scheme="slate"] .md-typeset a:hover,
+[data-md-color-scheme="slate"] .md-nav__link:hover,
+[data-md-color-scheme="slate"] .md-tabs__link:hover {
+  color: #1E8AFF;
+}
+
+/* Light mode logo */
+[data-md-color-scheme="default"] .md-header__button.md-logo img,
+[data-md-color-scheme="default"] .md-nav__title .md-nav__button.md-logo img {
+  content: url("../monkdb_logo_v3_white.svg");
+}
+
+/* Dark mode logo */
+[data-md-color-scheme="slate"] .md-header__button.md-logo img,
+[data-md-color-scheme="slate"] .md-nav__title .md-nav__button.md-logo img {
+  content: url("../monkdb_logo_v3_white.svg");
+}
+
+.feature-tags {
+  margin: 0.3rem 0 1rem;
+}
+
+.gh-label {
+  display: inline-block;
+  padding: 0.18rem 0.52rem;
+  margin-right: 0.35rem;
+  margin-bottom: 0.25rem;
+  border-radius: 999px;
+  border: 1px solid #d0d7de;
+  background: #f6f8fa;
+  color: #24292f;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.gh-label-release {
+  border-color: #0033A0;
+  background: #eaf1ff;
+  color: #0033A0;
+}
+
+[data-md-color-scheme="slate"] .gh-label {
+  border-color: #3d444d;
+  background: #161b22;
+  color: #e6edf3;
+}
+
+[data-md-color-scheme="slate"] .gh-label-release {
+  border-color: #79a8ff;
+  background: #0f254f;
+  color: #b9d1ff;
+}

@@ -1,0 +1,44 @@
+site_name: MonkDB Documentation
+site_description: MonkDB product documentation
+edit_uri: ""
+site_url: https://monkdbofficial.github.io/monkdb.docs/
+copyright: Documentation Belongs to Movibase Platform Private Limited
+
+docs_dir: v3
+site_dir: site
+
+theme:
+  name: material
+  logo: assets/monkdb_logo_v3_white.svg
+  favicon: assets/monkdb_favicon.png
+  font:
+    text: IBM Plex Sans
+    code: IBM Plex Mono
+  features:
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - navigation.top
+    - navigation.path
+    - navigation.indexes
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/white-balance-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+
+extra_css:
+  - assets/stylesheets/extra.css
