@@ -13,10 +13,11 @@ It supports:
 - Native memory for agentic and RAG workflows
 - Graph modeling and traversal interfaces
 - External data federation through FDW
+- Unstructured data in the form of blobs
 
 ## Design goals
 
-- One engine for mixed SQL/search/vector/geo/graph workloads.
+- One engine for mixed SQL/search/vector/geo/graph/timeseries/full text/nosql/blob/memory workloads.
 - Horizontal scale through shard-based distribution.
 - High observability via system tables and runtime metrics.
 - Strong governance controls (policies, contracts, audit, lineage) built into query/runtime path.
@@ -33,47 +34,8 @@ It supports:
 
 ## Core architecture layers
 
-```mermaid
-flowchart TB
-    subgraph Client Layer
-      C1[SQL Clients\nPGWire]
-      C2[HTTP SQL Clients]
-      C3[Gremlin Clients]
-    end
+![Core Architecture Layer](../assets/architectures/monkdb_arch_overview_1.png)
 
-    subgraph Access Layer
-      A1[PGWire Endpoint]
-      A2[HTTP Endpoint]
-      A3[Gremlin HTTP Gateway]
-    end
-
-    subgraph SQL Engine
-      S1[Parser + Analyzer]
-      S2[Planner + Optimizer]
-      S3[Distributed Execution]
-      S4[Function Runtime\nScalar/Agg/Table/UDF]
-    end
-
-    subgraph Data/Metadata
-      D1[Cluster State\nSchemas, Settings, Routing]
-      D2[Shard Storage\nLucene + Translog]
-      D3[System Schemas\nsys/information_schema]
-      D4[Governance Metadata\nPolicy/Contract/Lineage]
-    end
-
-    C1 --> A1
-    C2 --> A2
-    C3 --> A3
-
-    A1 --> S1
-    A2 --> S1
-    A3 --> S1
-
-    S1 --> S2 --> S3 --> D2
-    S3 --> D1
-    S3 --> D3
-    S3 --> D4
-```
 
 ## Control plane and data plane
 
@@ -105,22 +67,7 @@ This avoids primary/secondary bottlenecks common in single-writer architectures.
 
 ## Query execution lifecycle
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Coordinator as Coordinator Node
-    participant NodeA as Data Node A
-    participant NodeB as Data Node B
-
-    Client->>Coordinator: SQL request
-    Coordinator->>Coordinator: parse/analyze/plan
-    Coordinator->>NodeA: shard op
-    Coordinator->>NodeB: shard op
-    NodeA-->>Coordinator: partial result
-    NodeB-->>Coordinator: partial result
-    Coordinator->>Coordinator: merge/reduce/final projection
-    Coordinator-->>Client: result set
-```
+![Query exection lifecyle](../assets/architectures/query_exec.png)
 
 Execution stages:
 
@@ -132,21 +79,7 @@ Execution stages:
 
 ## Query path decision flow
 
-```mermaid
-flowchart TD
-    A[Incoming Request] --> B{Protocol}
-    B -->|PGWire| C[SQL Parser/Analyzer]
-    B -->|HTTP SQL| C
-    B -->|Gremlin HTTP| G[Gremlin Gateway -> SQL/graph ops]
-    G --> C
-    C --> D{Governance Active?}
-    D -->|Yes| E[Apply policy/contract checks]
-    D -->|No| F[Plan execution]
-    E --> F
-    F --> H[Distributed shard execution]
-    H --> I[Coordinator merge/finalize]
-    I --> J[Response + metrics/audit/lineage]
-```
+![Query path decision flow](../assets/architectures/query_path_flow.png)
 
 ## Multi-model model-in-one-table pattern
 

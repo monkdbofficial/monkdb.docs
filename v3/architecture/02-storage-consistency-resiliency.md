@@ -10,21 +10,7 @@
 
 ## Write path
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Primary as Primary Shard
-    participant Replica1 as Replica Shard 1
-    participant Replica2 as Replica Shard 2
-
-    Client->>Primary: write row/document
-    Primary->>Primary: validate + apply + translog
-    Primary->>Replica1: replicate
-    Primary->>Replica2: replicate
-    Replica1-->>Primary: ack
-    Replica2-->>Primary: ack
-    Primary-->>Client: success
-```
+![Write path](../assets/architectures/write_path.png)
 
 Write-path notes:
 
@@ -91,13 +77,7 @@ SELECT * FROM doc.orders WHERE id = 'o-1';
 
 ## Failure recovery flow
 
-```mermaid
-flowchart LR
-    A[Primary Node Failure] --> B[Replica Promotion]
-    B --> C[Routing Table Update]
-    C --> D[Shard Recovery/Relocation]
-    D --> E[Cluster Back to STARTED]
-```
+![Failure recovery flow](../assets/architectures/Failure_Recovery_Flow.png)
 
 ## Recovery and allocation diagnostics
 

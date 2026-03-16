@@ -69,22 +69,7 @@ Tune per table according to workload criticality and SLA.
 
 ## Zone-aware resiliency pattern
 
-```mermaid
-flowchart LR
-    subgraph AZ1
-      N1[Node A]
-    end
-    subgraph AZ2
-      N2[Node B]
-    end
-    subgraph AZ3
-      N3[Node C]
-    end
-
-    N1 --- N2
-    N2 --- N3
-    N1 --- N3
-```
+![Zone aware resiliency pattern](../assets/architectures/zone_aware_res_pattern.png)
 
 Run quorum-capable topology across independent failure domains.
 
@@ -121,14 +106,7 @@ Cluster-level examples:
 
 ## Safe rolling-change sequence
 
-```mermaid
-flowchart TD
-    A[Prepare Node Change] --> B[Drain/Restart Single Node]
-    B --> C[Watch sys.shards + sys.allocations]
-    C --> D{Cluster Stable?}
-    D -->|No| C
-    D -->|Yes| E[Proceed to Next Node]
-```
+![Safe rolling change sequence](../assets/architectures/safe_rolling_change_seq.png)
 
 ## Scale troubleshooting checklist
 
