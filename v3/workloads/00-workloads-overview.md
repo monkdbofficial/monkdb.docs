@@ -16,6 +16,6 @@ This section contains production-style workload labs organized by domain.
 
 ## Lab assumptions
 
-- MonkDB is running locally (recommended: [3-node compose](../deployment/01-docker-compose-3node.md))
+- MonkDB is running locally (recommended: [3-node compose](../deployment/01-docker-compose-2node.md))
 - You can connect with `psql`
 - Examples use `doc` schema unless stated otherwise

@@ -20,7 +20,7 @@
 
 ## Deployment
 
-- [Docker Compose (3-node)](./deployment/01-docker-compose-3node.md)
+- [Docker Compose (3-node)](./deployment/01-docker-compose-2node.md)
 - [Production Topologies](./deployment/02-production-topologies.md)
 - [Kubernetes Deployment Principles](./deployment/03-kubernetes.md)
 - [Configuration and Settings](./deployment/04-configuration.md)

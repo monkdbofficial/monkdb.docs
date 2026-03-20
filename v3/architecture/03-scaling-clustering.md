@@ -356,7 +356,7 @@ If latency increases during scale events:
 
 # Related Documentation
 
-- [Docker Compose Deployment](../deployment/01-docker-compose-3node.md)
+- [Docker Compose Deployment](../deployment/01-docker-compose-2node.md)
 - [Production Topologies](../deployment/02-production-topologies.md)
 - [Kubernetes Deployment Principles](../deployment/03-kubernetes.md)
 - [Monitoring](../operations/monitoring.md)
