@@ -100,7 +100,7 @@ monkdb://host:[port]?param1=value1&param2=value2
 #### Mode-Specific Parameters:
 
 - **`mode`**: Sets how the subscriber cluster communicates with the publisher cluster. Two modes are supported:
-    - `sniff` (default): The subscriber uses the transport protocol and attempts to establish direct connections to each node in the publisher cluster. The default port is 4300.
+    - `sniff` (default): The subscriber uses the transport protocol and attempts to establish direct connections to each node in the publisher cluster. The default port is 6100.
     - `pg_tunnel`: The subscriber initiates the connection using the PostgreSQL wire protocol and routes all traffic through a single node. The default port is 5432.
 
     **`sniff` mode Example**: `monkdb://example.com:4310,123.123.123.123` (multiple hosts can be specified)
@@ -128,7 +128,7 @@ Create a subscription named `my_subscription` in `sniff` mode:
 
 ```sql
 CREATE SUBSCRIPTION my_subscription
-CONNECTION 'monkdb://publisher.example.com:4300?user=repl_user&password=secret_password'
+CONNECTION 'monkdb://publisher.example.com:6100?user=repl_user&password=secret_password'
 PUBLICATION my_publication;
 ```
 
@@ -145,7 +145,7 @@ PUBLICATION my_publication;
 
 ```sql
 CREATE SUBSCRIPTION multi_seed_subscription
-CONNECTION 'monkdb://example.com:4300,123.123.123.123:4300?user=repl_user&password=secret_password'
+CONNECTION 'monkdb://example.com:6100,123.123.123.123:6100?user=repl_user&password=secret_password'
 PUBLICATION my_publication;
 ```
 

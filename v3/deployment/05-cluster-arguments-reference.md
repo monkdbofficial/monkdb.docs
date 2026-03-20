@@ -31,7 +31,7 @@ This page documents practical cluster and runtime flags used in MonkDB deploymen
 
 ## Recommended usage pattern
 
-1. Use [Docker Compose (3-node)](./01-docker-compose-3node.md) for cluster validation.
+1. Use [Docker Compose (2-node)](./01-docker-compose-2node.md) for cluster validation.
 2. Start with minimal safe flags, then add environment-specific tuning.
 3. Validate health after startup.
 
