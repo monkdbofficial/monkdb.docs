@@ -27,6 +27,6 @@ MonkDB is a distributed, multi-model SQL database built for operational and anal
 2. Validate host tuning in [System Prerequisites](./02-system-prerequisites.md)
 3. Provision a node with [Provisioning with Docker Image](./03-provisioning-docker-image.md)
 4. Configure runtime defaults in [monkdb.yaml / monkdb.yml Guide](./04-monkdb-yaml.md)
-5. Choose deployment path from [Deployment](../deployment/01-docker-compose-3node.md)
+5. Choose deployment path from [Deployment](../deployment/01-docker-compose-2node.md)
 6. Use [Workloads Overview](../workloads/00-workloads-overview.md) for domain examples
 7. Use [SQL Command Catalog](../SQL/08-command-catalog.md) for parser-aligned SQL reference
