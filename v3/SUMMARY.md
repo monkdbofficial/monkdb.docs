@@ -76,7 +76,7 @@
 - [Governance, Audit, Lineage](./features/governance-audit-lineage.md)
 - [Governance E2E Lab](./features/governance-e2e-lab.md)
 - [Geospatial WKB and 3D Retention](./features/geospatial-wkb-3d.md)
-- [Financial Protocol Ingest](./features/protocol-ingest.md)
+- [Financial Protocol Ingest](./features/financial-wire-protocols.md)
 - [License Management](./features/licensing.md)
 
 ## Operations

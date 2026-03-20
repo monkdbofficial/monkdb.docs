@@ -14,7 +14,7 @@ This page tracks feature highlights by MonkDB release.
 
 ### Notes
 
-- [Financial Protocol Ingest](./features/protocol-ingest.md)
+- [Financial Protocol Ingest](./features/financial-wire-protocols.md)
 
 ## 26.3.1
 
