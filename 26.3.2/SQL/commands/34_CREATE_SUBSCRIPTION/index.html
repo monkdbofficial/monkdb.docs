@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../assets/monkdb_favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -10367,14 +10367,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../deployment/01-docker-compose-3node/" class="md-nav__link">
+      <a href="../../../deployment/01-docker-compose-2node/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Docker Compose (3-node)
+    Docker Compose (2-nodes)
   
 
     
@@ -10641,6 +10641,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../features/financial-wire-protocols/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../features/float-vector-similarity/" class="md-nav__link">
         
   
@@ -10817,34 +10845,6 @@
     
   
     Memory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../features/protocol-ingest/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
   
 
     
@@ -12985,7 +12985,7 @@ PUBLICATION publication_name [, ...]
 <li>
 <p><strong><code>mode</code></strong>: Sets how the subscriber cluster communicates with the publisher cluster. Two modes are supported:</p>
 <ul>
-<li><code>sniff</code> (default): The subscriber uses the transport protocol and attempts to establish direct connections to each node in the publisher cluster. The default port is 4300.</li>
+<li><code>sniff</code> (default): The subscriber uses the transport protocol and attempts to establish direct connections to each node in the publisher cluster. The default port is 6100.</li>
 <li><code>pg_tunnel</code>: The subscriber initiates the connection using the PostgreSQL wire protocol and routes all traffic through a single node. The default port is 5432.</li>
 </ul>
 <p><strong><code>sniff</code> mode Example</strong>: <code>monkdb://example.com:4310,123.123.123.123</code> (multiple hosts can be specified)
@@ -13012,7 +13012,7 @@ PUBLICATION publication_name [, ...]
 <h3 id="example-1-creating-a-subscription-in-sniff-mode">Example 1: Creating a Subscription in <code>sniff</code> Mode</h3>
 <p>Create a subscription named <code>my_subscription</code> in <code>sniff</code> mode:</p>
 <pre><code class="language-sql">CREATE SUBSCRIPTION my_subscription
-CONNECTION 'monkdb://publisher.example.com:4300?user=repl_user&amp;password=secret_password'
+CONNECTION 'monkdb://publisher.example.com:6100?user=repl_user&amp;password=secret_password'
 PUBLICATION my_publication;
 </code></pre>
 <h3 id="example-2-creating-a-subscription-in-pg_tunnel-mode-with-ssl">Example 2: Creating a Subscription in <code>pg_tunnel</code> Mode with SSL</h3>
@@ -13023,7 +13023,7 @@ PUBLICATION my_publication;
 </code></pre>
 <h3 id="example-3-creating-a-subscription-with-multiple-seed-nodes-in-sniff-mode">Example 3: Creating a Subscription with Multiple Seed Nodes in Sniff Mode</h3>
 <pre><code class="language-sql">CREATE SUBSCRIPTION multi_seed_subscription
-CONNECTION 'monkdb://example.com:4300,123.123.123.123:4300?user=repl_user&amp;password=secret_password'
+CONNECTION 'monkdb://example.com:6100,123.123.123.123:6100?user=repl_user&amp;password=secret_password'
 PUBLICATION my_publication;
 </code></pre>
 <hr />

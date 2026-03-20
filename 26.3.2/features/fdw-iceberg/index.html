@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/monkdb_favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -10006,14 +10006,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/01-docker-compose-3node/" class="md-nav__link">
+      <a href="../../deployment/01-docker-compose-2node/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Docker Compose (3-node)
+    Docker Compose (2-nodes)
   
 
     
@@ -10489,6 +10489,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../financial-wire-protocols/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../float-vector-similarity/" class="md-nav__link">
         
   
@@ -10665,34 +10693,6 @@
     
   
     Memory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../protocol-ingest/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
   
 
     
@@ -12542,18 +12542,16 @@
 </ul>
 <h2 id="supported-catalogs">Supported catalogs</h2>
 <ul>
-<li><code>hadoop</code></li>
-<li><code>hive</code></li>
 <li><code>rest</code></li>
 <li><code>nessie</code></li>
 </ul>
 <h2 id="important-jdk-23-note">Important JDK 23 note</h2>
-<p>Hadoop/Hive catalogs are not supported on JDK 23+ due to Hadoop dependency on <code>Subject.getSubject</code>.</p>
-<p>Use one of:</p>
+<p>MonkDB is built and runs on JDK 23. Because Hadoop/Hive Iceberg catalogs depend on Hadoop APIs that are not compatible with JDK 23+ (<code>Subject.getSubject</code>), the effective supported catalogs for this build are:</p>
 <ul>
-<li>JDK 17 or JDK 21</li>
-<li>REST/Nessie catalogs on JDK 23+</li>
+<li><code>rest</code></li>
+<li><code>nessie</code></li>
 </ul>
+<p><code>hadoop</code> and <code>hive</code> catalog modes require a JDK 17/21 runtime and are not a supported path on the JDK 23 build.</p>
 <h2 id="options">Options</h2>
 <h3 id="mandatory-server-options">Mandatory server options</h3>
 <ul>
@@ -12641,7 +12639,7 @@ OPTIONS (
 <li>FDW path is read-only (no remote writes/DDL).</li>
 <li>Simple pushdowns only (scan-level filter + projection + time travel).</li>
 <li>Iceberg is a table format, not a remote query engine; join/aggregation pushdown is not available.</li>
-<li>JDK 23+: Hadoop/Hive catalogs fail fast by design.</li>
+<li>On JDK 23 builds, Hadoop/Hive catalogs fail fast by design.</li>
 </ul>
 <p>Support notes from current implementation scope:</p>
 <ul>

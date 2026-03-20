@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/monkdb_favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -10006,14 +10006,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/01-docker-compose-3node/" class="md-nav__link">
+      <a href="../../deployment/01-docker-compose-2node/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Docker Compose (3-node)
+    Docker Compose (2-nodes)
   
 
     
@@ -10280,6 +10280,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../features/financial-wire-protocols/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../features/float-vector-similarity/" class="md-nav__link">
         
   
@@ -10456,34 +10484,6 @@
     
   
     Memory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/protocol-ingest/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
   
 
     
@@ -12470,35 +12470,35 @@
 <h2 id="pull-image">Pull image</h2>
 <h3 id="amd64">AMD64</h3>
 <p>If your system is based on AMD64 chipset processor:</p>
-<pre><code class="language-bash">docker pull rg.fr-par.scw.cloud/monkdb/monkdb:26.3.1-amd64
+<pre><code class="language-bash">docker pull rg.fr-par.scw.cloud/monkdb/monkdb:26.3.2-amd64
 </code></pre>
 <h3 id="arm64">ARM64</h3>
 <p>If your system is based on ARM64 chipset processor:</p>
-<pre><code class="language-bash">docker pull rg.fr-par.scw.cloud/monkdb/monkdb:26.3.1-arm64
+<pre><code class="language-bash">docker pull rg.fr-par.scw.cloud/monkdb/monkdb:26.3.2-arm64
 </code></pre>
-<p>Current stable release in this guide: <code>26.3.1</code>.
+<p>Current stable release in this guide: <code>26.3.2</code>.
 Update the tag when a newer release is published.</p>
 <h2 id="verify-image">Verify image</h2>
 <pre><code class="language-bash">docker images
 </code></pre>
 <p>Example output on AMD64:</p>
 <pre><code class="language-text">IMAGE                                              ID             DISK USAGE   CONTENT SIZE   EXTRA
-rg.fr-par.scw.cloud/monkdb/monkdb:26.3.1-amd64   508f75ddee28        878MB             0B
+rg.fr-par.scw.cloud/monkdb/monkdb:26.3.2-amd64   508f75ddee28        878MB             0B
 </code></pre>
 <p>Example output on ARM64:</p>
 <pre><code class="language-text">IMAGE                                              ID             DISK USAGE   CONTENT SIZE   EXTRA
-rg.fr-par.scw.cloud/monkdb/monkdb:26.3.1-arm64   508f75ddee28        878MB             0B
+rg.fr-par.scw.cloud/monkdb/monkdb:26.3.2-arm64   508f75ddee28        878MB             0B
 </code></pre>
 <h2 id="run-container-sample">Run container (sample)</h2>
 <p>You can tune args and values based on your <code>monkdb.yml</code> settings.</p>
 <pre><code class="language-bash">docker run -d \
-  --publish=4200:4200 \
+  --publish=6000:6000 \
   --publish=5432:5432 \
   --env MONKDB_HEAP_SIZE=1g \
   --env MONKDB_INDICES_FIELDDATA_BREAKER_LIMIT=60% \
   --net=monkdb \
   --name=monkdb01 \
-  rg.fr-par.scw.cloud/monkdb/monkdb:26.3.1-amd64 \
+  rg.fr-par.scw.cloud/monkdb/monkdb:26.3.2-amd64 \
   -Cnetwork.host=_site_,_local_ \
   -Cnode.name=monkdb01 \
   -Cauth.host_based.config.0.user=monkdb \
@@ -12508,7 +12508,7 @@ rg.fr-par.scw.cloud/monkdb/monkdb:26.3.1-arm64   508f75ddee28        878MB      
 </code></pre>
 <h2 id="what-each-setting-does">What each setting does</h2>
 <ul>
-<li><code>4200</code> is the HTTP endpoint for SQL-over-HTTP API clients.</li>
+<li><code>6000</code> is the HTTP endpoint for SQL-over-HTTP API clients.</li>
 <li><code>5432</code> is PGWire endpoint for PostgreSQL-compatible clients (<code>psql</code>, drivers, BI tools).</li>
 <li><code>MONKDB_HEAP_SIZE=1g</code> configures JVM heap for MonkDB process.</li>
 <li><code>--net=monkdb</code> attaches the container to the dedicated network.</li>

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/monkdb_favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -10006,14 +10006,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/01-docker-compose-3node/" class="md-nav__link">
+      <a href="../../deployment/01-docker-compose-2node/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Docker Compose (3-node)
+    Docker Compose (2-nodes)
   
 
     
@@ -10280,6 +10280,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../features/financial-wire-protocols/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../features/float-vector-similarity/" class="md-nav__link">
         
   
@@ -10456,34 +10484,6 @@
     
   
     Memory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/protocol-ingest/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
   
 
     
@@ -12305,13 +12305,13 @@ CLUSTERED INTO 3 SHARDS;
 <h2 id="upload-download-delete">Upload / download / delete</h2>
 <p>MonkDB BLOBs are addressed by SHA-1 hash of content.</p>
 <pre><code class="language-bash"># upload
-curl -X PUT &quot;http://localhost:4200/_blobs/media/&lt;SHA1&gt;&quot; --data-binary @sample.pdf
+curl -X PUT &quot;http://localhost:6000/_blobs/media/&lt;SHA1&gt;&quot; --data-binary @sample.pdf
 
 # download
-curl -X GET &quot;http://localhost:4200/_blobs/media/&lt;SHA1&gt;&quot; -o downloaded.pdf
+curl -X GET &quot;http://localhost:6000/_blobs/media/&lt;SHA1&gt;&quot; -o downloaded.pdf
 
 # delete
-curl -X DELETE &quot;http://localhost:4200/_blobs/media/&lt;SHA1&gt;&quot;
+curl -X DELETE &quot;http://localhost:6000/_blobs/media/&lt;SHA1&gt;&quot;
 </code></pre>
 <h2 id="production-pattern-metadata-table">Production pattern: metadata table</h2>
 <p>BLOB tables do not provide rich SQL metadata browsing by default. Keep a relational metadata table:</p>

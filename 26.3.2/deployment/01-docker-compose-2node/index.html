@@ -10,24 +10,24 @@
       
       
       
-        <link rel="canonical" href="https://monkdbofficial.github.io/monkdb.docs/26.3.2/features/protocol-ingest/">
+        <link rel="canonical" href="https://monkdbofficial.github.io/monkdb.docs/26.3.2/deployment/01-docker-compose-2node/">
       
       
-        <link rel="prev" href="../memory/">
+        <link rel="prev" href="../../architecture/03-scaling-clustering/">
       
       
-        <link rel="next" href="../uuid/">
+        <link rel="next" href="../02-production-topologies/">
       
       
         
       
       
       <link rel="icon" href="../../assets/monkdb_favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH) - MonkDB Documentation</title>
+        <title>Docker Compose (2-nodes) - MonkDB Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#financial-protocol-ingest-fix-fdc3-itch-ouch" class="md-skip">
+        <a href="#docker-compose-2-nodes" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
+              Docker Compose (2-nodes)
             
           </span>
         </div>
@@ -9944,8 +9944,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -9963,11 +9965,11 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -9988,7 +9990,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -10003,17 +10005,44 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../deployment/01-docker-compose-3node/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Compose (2-nodes)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
     
   
-    Docker Compose (3-node)
+    Docker Compose (2-nodes)
   
 
     
@@ -10022,6 +10051,103 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compose-file-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compose File (Current)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reset-data-volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reset data volumes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#for-3-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For 3+ nodes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -10034,7 +10160,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/02-production-topologies/" class="md-nav__link">
+      <a href="../02-production-topologies/" class="md-nav__link">
         
   
   
@@ -10062,7 +10188,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/03-kubernetes/" class="md-nav__link">
+      <a href="../03-kubernetes/" class="md-nav__link">
         
   
   
@@ -10090,7 +10216,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/04-configuration/" class="md-nav__link">
+      <a href="../04-configuration/" class="md-nav__link">
         
   
   
@@ -10118,7 +10244,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/05-cluster-arguments-reference/" class="md-nav__link">
+      <a href="../05-cluster-arguments-reference/" class="md-nav__link">
         
   
   
@@ -10150,10 +10276,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -10183,11 +10307,11 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -10208,7 +10332,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -10226,7 +10350,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fdw-iceberg/" class="md-nav__link">
+      <a href="../../features/fdw-iceberg/" class="md-nav__link">
         
   
   
@@ -10254,7 +10378,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fdw-jdbc/" class="md-nav__link">
+      <a href="../../features/fdw-jdbc/" class="md-nav__link">
         
   
   
@@ -10282,7 +10406,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../float-vector-similarity/" class="md-nav__link">
+      <a href="../../features/financial-wire-protocols/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/float-vector-similarity/" class="md-nav__link">
         
   
   
@@ -10310,7 +10462,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../geospatial-wkb-3d/" class="md-nav__link">
+      <a href="../../features/geospatial-wkb-3d/" class="md-nav__link">
         
   
   
@@ -10338,7 +10490,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../governance-audit-lineage/" class="md-nav__link">
+      <a href="../../features/governance-audit-lineage/" class="md-nav__link">
         
   
   
@@ -10366,7 +10518,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../governance-e2e-lab/" class="md-nav__link">
+      <a href="../../features/governance-e2e-lab/" class="md-nav__link">
         
   
   
@@ -10394,7 +10546,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../graph-and-gremlin/" class="md-nav__link">
+      <a href="../../features/graph-and-gremlin/" class="md-nav__link">
         
   
   
@@ -10422,7 +10574,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../licensing/" class="md-nav__link">
+      <a href="../../features/licensing/" class="md-nav__link">
         
   
   
@@ -10450,7 +10602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../memory/" class="md-nav__link">
+      <a href="../../features/memory/" class="md-nav__link">
         
   
   
@@ -10475,129 +10627,10 @@
                 
   
   
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#supported-schemes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported schemes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fix-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        FIX example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fdc3-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        FDC3 example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#itch-ouch-note" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ITCH / OUCH note
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
   
   
     <li class="md-nav__item">
-      <a href="../uuid/" class="md-nav__link">
+      <a href="../../features/uuid/" class="md-nav__link">
         
   
   
@@ -12188,10 +12221,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#supported-schemes" class="md-nav__link">
+  <a href="#topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported schemes
+        Topology
       
     </span>
   </a>
@@ -12199,10 +12232,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#fix-example" class="md-nav__link">
+  <a href="#start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        FIX example
+        Start
       
     </span>
   </a>
@@ -12210,10 +12243,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#fdc3-example" class="md-nav__link">
+  <a href="#compose-file-current" class="md-nav__link">
     <span class="md-ellipsis">
       
-        FDC3 example
+        Compose File (Current)
       
     </span>
   </a>
@@ -12221,10 +12254,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#itch-ouch-note" class="md-nav__link">
+  <a href="#verify" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ITCH / OUCH note
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reset-data-volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reset data volumes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#for-3-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For 3+ nodes
       
     </span>
   </a>
@@ -12274,10 +12340,10 @@
     
     
       <li class="md-path__item">
-        <a href="../fdw-iceberg/" class="md-path__link">
+        <a href="./" class="md-path__link">
           
   <span class="md-ellipsis">
-    Features
+    Deployment
   </span>
 
         </a>
@@ -12296,76 +12362,101 @@
 
 
 
-<h1 id="financial-protocol-ingest-fix-fdc3-itch-ouch">Financial Protocol Ingest (FIX, FDC3, ITCH, OUCH)</h1>
-<div class="feature-tags"><span class="gh-label gh-label-release">26.3.2</span><span class="gh-label">FIX</span><span class="gh-label">FDC3</span><span class="gh-label">ITCH</span><span class="gh-label">OUCH</span></div>
-
-<p>MonkDB includes protocol ingest plugin support via custom <code>COPY FROM</code> URI schemes.</p>
-<h2 id="supported-schemes">Supported schemes</h2>
+<h1 id="docker-compose-2-nodes">Docker Compose (2-nodes)</h1>
+<p>This guide maps directly to <code>docker-compose.2node.yml</code> in this repository.</p>
+<h2 id="topology">Topology</h2>
 <ul>
-<li><code>fix://</code></li>
-<li><code>fdc3://</code></li>
-<li><code>itch://</code></li>
-<li><code>ouch://</code></li>
+<li><code>monkdb001</code>: HTTP <code>6000</code>, PGWire <code>5432</code>, transport <code>6100</code></li>
+<li><code>monkdb002</code>: HTTP <code>6001</code>, PGWire <code>5433</code>, transport <code>6101</code></li>
 </ul>
-<p>URI rule:</p>
-<ul>
-<li>Must use absolute local path</li>
-<li>Host component is not supported</li>
-<li>Example: <code>fix:///data/protocol-ingest/fix.log</code></li>
-</ul>
-<h2 id="fix-example">FIX example</h2>
-<pre><code class="language-sql">CREATE TABLE monkdb.fix_events (
-  protocol STRING,
-  beginString STRING,
-  bodyLength STRING,
-  msgType STRING,
-  msgSeqNum STRING,
-  senderCompId STRING,
-  targetCompId STRING,
-  sendingTime STRING,
-  clOrdId STRING,
-  orderId STRING,
-  symbol STRING,
-  side STRING,
-  orderQty STRING,
-  ordType STRING,
-  price STRING,
-  timeInForce STRING,
-  execType STRING,
-  ordStatus STRING,
-  checkSum STRING,
-  tags OBJECT(DYNAMIC)
-) WITH (number_of_replicas = 0, column_policy = 'dynamic');
+<p>All nodes share cluster name <code>monkdb-lab</code> and join via <code>discovery.seed_hosts=monkdb001</code>.</p>
+<h2 id="start">Start</h2>
+<pre><code class="language-bash">docker network create monkdb || true
+docker compose -f docker-compose.2node.yml up -d monkdb001 monkdb002
+</code></pre>
+<p><code>docker-compose.2node.yml</code> uses an external network named <code>monkdb</code>, so <code>docker network create monkdb</code> is required before first startup.</p>
+<h2 id="compose-file-current">Compose File (Current)</h2>
+<pre><code class="language-yaml">services:
+  monkdb001:
+    image: rg.fr-par.scw.cloud/monkdb/monkdb:26.3.2-amd64
+    container_name: monkdb001
+    hostname: monkdb001
+    environment:
+      MONKDB_HEAP_SIZE: 1g
+      MONKDB_INDICES_FIELDDATA_BREAKER_LIMIT: 60%
+    command:
+      - -Ccluster.name=monkdb-licensing-lab
+      - -Cnetwork.host=0.0.0.0
+      - -Cnetwork.publish_host=monkdb001
+      - -Ctransport.port=6100
+      - -Cnode.name=monkdb001
+      - -Cdiscovery.seed_hosts=monkdb001
+      - -Ccluster.initial_master_nodes=monkdb001
+      - -Cauth.host_based.config.0.user=monkdb
+      - -Cauth.host_based.config.0.address=_local_
+      - -Cauth.host_based.config.0.method=trust
+      - -Cauth.host_based.config.99.method=password
+    ports:
+      - &quot;6000:6000&quot;
+      - &quot;5432:5432&quot;
+      - &quot;6100:6100&quot;
+    volumes:
+      - monkdb001-data:/data
+    networks:
+      - monkdb
 
-COPY monkdb.fix_events
-FROM 'fix:///data/protocol-ingest/fix.log'
-WITH (format='json', fix_delimiter='pipe')
-RETURN SUMMARY;
-</code></pre>
-<p><code>fix_delimiter</code> allowed values:</p>
-<ul>
-<li><code>auto</code></li>
-<li><code>soh</code></li>
-<li><code>pipe</code></li>
-</ul>
-<h2 id="fdc3-example">FDC3 example</h2>
-<pre><code class="language-sql">CREATE TABLE monkdb.fdc3_events (
-  protocol STRING,
-  type STRING,
-  id OBJECT(DYNAMIC),
-  src STRING
-) WITH (number_of_replicas = 0, column_policy = 'dynamic');
+  monkdb002:
+    image: rg.fr-par.scw.cloud/monkdb/monkdb:26.3.2-amd64
+    container_name: monkdb002
+    hostname: monkdb002
+    environment:
+      MONKDB_HEAP_SIZE: 1g
+      MONKDB_INDICES_FIELDDATA_BREAKER_LIMIT: 60%
+    command:
+      - -Ccluster.name=monkdb-licensing-lab
+      - -Cnetwork.host=0.0.0.0
+      - -Cnetwork.publish_host=monkdb002
+      - -Ctransport.port=6100
+      - -Cnode.name=monkdb002
+      - -Cdiscovery.seed_hosts=monkdb001
+      - -Ccluster.initial_master_nodes=monkdb001
+      - -Cauth.host_based.config.0.user=monkdb
+      - -Cauth.host_based.config.0.address=_local_
+      - -Cauth.host_based.config.0.method=trust
+      - -Cauth.host_based.config.99.method=password
+    ports:
+      - &quot;6001:6000&quot;
+      - &quot;5433:5432&quot;
+      - &quot;6101:6100&quot;
+    volumes:
+      - monkdb002-data:/data
+    networks:
+      - monkdb
 
-COPY monkdb.fdc3_events
-FROM 'fdc3:///data/protocol-ingest/fdc3.ndjson'
-WITH (format='json')
-RETURN SUMMARY;
+volumes:
+  monkdb001-data:
+  monkdb002-data:
+
+networks:
+  monkdb:
+    external: true
+    name: monkdb
 </code></pre>
-<h2 id="itch-ouch-note">ITCH / OUCH note</h2>
-<p>ITCH and OUCH readers expect framed binary input (2-byte length-prefixed messages).</p>
-<pre><code class="language-sql">COPY monkdb.itch_events FROM 'itch:///data/protocol-ingest/itch.bin' WITH (format='json') RETURN SUMMARY;
-COPY monkdb.ouch_events FROM 'ouch:///data/protocol-ingest/ouch.bin' WITH (format='json') RETURN SUMMARY;
+<p><strong>PS</strong>: If you are trying to use <code>ARM64</code> instance to deploy MonkDB image, please pull appropriate MonkDB image for <code>ARM64</code> architecture.</p>
+<h2 id="verify">Verify</h2>
+<pre><code class="language-bash">psql -h 127.0.0.1 -p 5432 -U monkdb -d monkdb -c &quot;select id, master_node from sys.cluster;&quot;
+psql -h 127.0.0.1 -p 5432 -U monkdb -d monkdb -c &quot;select id, name from sys.nodes order by name;&quot;
 </code></pre>
+<h2 id="stop">Stop</h2>
+<pre><code class="language-bash">docker compose -f docker-compose.2node.yml down
+</code></pre>
+<h2 id="reset-data-volumes">Reset data volumes</h2>
+<pre><code class="language-bash">docker compose -f docker-compose.2node.yml down -v --remove-orphans
+docker rm -f monkdb001 monkdb002 monkdb003 2&gt;/dev/null || true
+docker volume rm monkdb_monkdb001-data monkdb_monkdb002-data monkdb_monkdb003-data 2&gt;/dev/null || true
+</code></pre>
+<h2 id="for-3-nodes">For 3+ nodes</h2>
+<p>A license need to be procured for 3+ nodes of MonkDB provisioning. MonkDB is free for 2 nodes.</p>
 
 
 
