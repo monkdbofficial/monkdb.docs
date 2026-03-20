@@ -258,8 +258,8 @@ auth:
 
 ############################## Network And HTTP ###############################
 
-# By default, MonkDB binds to loopback addresses and listens on ports **4200-4300**
-# for HTTP traffic and **4300-4400** for node-to-node communication. If a port is
+# By default, MonkDB binds to loopback addresses and listens on ports **6000-6100**
+# for HTTP traffic and **6100-6200** for node-to-node communication. If a port is
 # occupied, it automatically selects the next available one.
 
 # In addition to IPv4 and IPv6 addresses, special values can be used:
@@ -279,14 +279,14 @@ auth:
 # binds for incoming connections and how it advertises itself to other nodes.
 #network.host: 192.168.0.1
 
-# Specify a custom port for node-to-node communication; the default is **4300**.
-#transport.tcp.port: 4300
+# Specify a custom port for node-to-node communication; the default is **6100**.
+#transport.tcp.port: 6100
 
 # Enable compression for node-to-node communication; it is disabled by default.
 #transport.tcp.compress: true
 
 # Specify a custom port for HTTP traffic.
-#http.port: 4200
+#http.port: 6000
 
 # Specify a custom maximum allowed content length for HTTP requests.:
 #http.max_content_length: 100mb

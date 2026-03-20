@@ -15,13 +15,13 @@ MonkDB BLOBs are addressed by SHA-1 hash of content.
 
 ```bash
 # upload
-curl -X PUT "http://localhost:4200/_blobs/media/<SHA1>" --data-binary @sample.pdf
+curl -X PUT "http://localhost:6000/_blobs/media/<SHA1>" --data-binary @sample.pdf
 
 # download
-curl -X GET "http://localhost:4200/_blobs/media/<SHA1>" -o downloaded.pdf
+curl -X GET "http://localhost:6000/_blobs/media/<SHA1>" -o downloaded.pdf
 
 # delete
-curl -X DELETE "http://localhost:4200/_blobs/media/<SHA1>"
+curl -X DELETE "http://localhost:6000/_blobs/media/<SHA1>"
 ```
 
 ## Production pattern: metadata table

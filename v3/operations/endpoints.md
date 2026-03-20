@@ -11,7 +11,7 @@ MonkDB exposes SQL over two primary interfaces plus graph gateway endpoints.
 ## HTTP endpoint
 
 - SQL over HTTP for REST-style integration.
-- Default port: `4200`.
+- Default port: `6000`.
 
 ## Gremlin HTTP gateway
 

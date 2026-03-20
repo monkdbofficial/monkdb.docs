@@ -35,7 +35,7 @@ Examples used in this repository:
 - `-Ccluster.name=...`
 - `-Cnetwork.host=0.0.0.0`
 - `-Cnetwork.publish_host=...`
-- `-Ctransport.port=4300`
+- `-Ctransport.port=6100`
 - `-Cnode.name=...`
 - `-Cdiscovery.seed_hosts=...`
 - `-Ccluster.initial_master_nodes=...`

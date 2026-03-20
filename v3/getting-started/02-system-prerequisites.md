@@ -59,9 +59,9 @@ Avoid swap for MonkDB processes. Prefer:
 
 Default ports commonly used:
 
-- HTTP: `4200`
+- HTTP: `6000`
 - PGWire: `5432`
-- Transport: `4300`
+- Transport: `6100`
 
 Use firewall rules and TLS in production.
 
