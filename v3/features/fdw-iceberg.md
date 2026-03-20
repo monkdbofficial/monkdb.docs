@@ -14,19 +14,17 @@ MonkDB supports read-only Iceberg FDW for catalog-backed table access.
 
 ## Supported catalogs
 
-- `hadoop`
-- `hive`
 - `rest`
 - `nessie`
 
 ## Important JDK 23 note
 
-Hadoop/Hive catalogs are not supported on JDK 23+ due to Hadoop dependency on `Subject.getSubject`.
+MonkDB is built and runs on JDK 23. Because Hadoop/Hive Iceberg catalogs depend on Hadoop APIs that are not compatible with JDK 23+ (`Subject.getSubject`), the effective supported catalogs for this build are:
 
-Use one of:
+- `rest`
+- `nessie`
 
-- JDK 17 or JDK 21
-- REST/Nessie catalogs on JDK 23+
+`hadoop` and `hive` catalog modes require a JDK 17/21 runtime and are not a supported path on the JDK 23 build.
 
 ## Options
 
@@ -132,7 +130,7 @@ SET GLOBAL TRANSIENT fdw.allow_local = true;
 - FDW path is read-only (no remote writes/DDL).
 - Simple pushdowns only (scan-level filter + projection + time travel).
 - Iceberg is a table format, not a remote query engine; join/aggregation pushdown is not available.
-- JDK 23+: Hadoop/Hive catalogs fail fast by design.
+- On JDK 23 builds, Hadoop/Hive catalogs fail fast by design.
 
 Support notes from current implementation scope:
 
